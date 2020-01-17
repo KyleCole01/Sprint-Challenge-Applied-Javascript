@@ -23,44 +23,46 @@ const URL = "https://lambda-times-backend.herokuapp.com/articles";
 requestGet(URL);
 
     function createCard(card){
-        const outerDiv = document.createElement("div");
-        outerDiv.className = "card";
+            const outerDiv = document.createElement("div");
+            outerDiv.className = "card";
 
-        const header = document.createElement("div");
-        header.textContent = card.headline;
-        header.className = "headline";
+            const header = document.createElement("div");
+            header.textContent = card.headline;
+            header.className = "headline";
+            outerDiv.append(header);
+
+            var author = document.createElement("div"); 
+        author.classList.add("author"); 
         outerDiv.append(header);
 
-        var author = document.createElement("div"); 
-    author.classList.add("author"); 
-    outerDiv.append(header);
+        var imgDiv = document.createElement("div"); 
+        imgDiv.classList.add("img-container"); 
+        var img = document.createElement("img"); 
+        img.setAttribute("src", card.authorPhoto);
+        imgDiv.appendChild(img); 
+        author.appendChild(imgDiv); 
 
-    var imgDiv = document.createElement("div"); 
-    imgDiv.classList.add("img-container"); 
-    var img = document.createElement("img"); 
-    img.setAttribute("src", card.authorPhoto);
-    imgDiv.appendChild(img); 
-    authorDiv.appendChild(imgDiv); 
+        var span = document.createElement("span"); 
+        span.textContent = ("By " + card.authorName);
+        author.append(span); 
 
-    var span = document.createElement("span"); 
-    span.textContent = ("By " + card.authorName);
-    authorDiv.append(span); 
+        outerDiv.append(author); 
+        return outerDiv; 
+    }
 
-    outerDiv.append(author); 
-    return outerDiv; 
-}
-
-let success = {boolean:false, message:"none"};
+let success = {boolean:false, message:""};
 
 function requestGet(url){
     axios.get(url)
-        .then( (response) =>{
+        .then(function (response){
             for(let article in response.data.articles){
                 response.data.articles[article]
-                .array.forEach(element => {
-                    document.querySelector(".cards-container").append(createCard(element));
+                .forEach(function(card) {
+                    document.querySelector(".cards-container").append(createCard(card));
                 });
             }
+            
+
             success.boolean = true;
             success.message = response;
             return success;
